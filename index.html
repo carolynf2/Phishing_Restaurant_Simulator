@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Restaurant Simulator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Main Menu -->
+        <div id="main-menu" class="screen active">
+            <div class="restaurant-sign">
+                <h1>🍽️ PHISHING RESTAURANT</h1>
+                <p class="tagline">Serving Safe Emails Daily!</p>
+            </div>
+            <div class="menu-options">
+                <button class="menu-button" onclick="startGame()">START SHIFT</button>
+                <button class="menu-button" onclick="showLeaderboard()">LEADERBOARD</button>
+                <button class="menu-button" onclick="showInstructions()">HOW TO COOK</button>
+                <button class="menu-button" onclick="showSettings()">SETTINGS</button>
+            </div>
+            <div class="restaurant-stats">
+                <div class="stat-card">
+                    <h3>👨‍🍳 Chef Level</h3>
+                    <p id="chef-level">Trainee</p>
+                </div>
+                <div class="stat-card">
+                    <h3>⭐ Best Score</h3>
+                    <p id="best-score">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>🏆 Customers Served</h3>
+                    <p id="total-customers">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions Screen -->
+        <div id="instructions" class="screen">
+            <div class="instruction-card">
+                <h2>🍳 HOW TO BE A CYBER CHEF</h2>
+                <div class="instruction-content">
+                    <h3>🎯 Your Mission</h3>
+                    <p>Run a restaurant where emails are served as dishes! Identify which "meals" are safe and which are poisoned with phishing tactics.</p>
+                    
+                    <h3>🍽️ Game Rules</h3>
+                    <ul>
+                        <li><strong>Green Button (SERVE):</strong> Email is safe to serve</li>
+                        <li><strong>Red Button (REJECT):</strong> Email is a phishing attempt</li>
+                        <li><strong>Speed Matters:</strong> Customers get impatient quickly!</li>
+                        <li><strong>Accuracy Counts:</strong> Wrong decisions upset customers</li>
+                    </ul>
+
+                    <h3>🚨 Phishing Ingredients to Watch For</h3>
+                    <ul>
+                        <li>Urgent or threatening language</li>
+                        <li>Suspicious sender addresses</li>
+                        <li>Requests for personal information</li>
+                        <li>Too-good-to-be-true offers</li>
+                        <li>Unusual links or attachments</li>
+                        <li>Poor grammar and spelling</li>
+                    </ul>
+
+                    <h3>🏆 Scoring System</h3>
+                    <ul>
+                        <li><strong>Correct Decision:</strong> +10 points + speed bonus</li>
+                        <li><strong>Wrong Decision:</strong> -5 points + angry customer</li>
+                        <li><strong>Speed Bonus:</strong> Up to +5 points for quick decisions</li>
+                    </ul>
+                </div>
+                <button class="menu-button" onclick="showMainMenu()">BACK TO KITCHEN</button>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="settings" class="screen">
+            <div class="instruction-card">
+                <h2>⚙️ RESTAURANT SETTINGS</h2>
+                <div class="settings-content">
+                    <div class="setting-item">
+                        <label for="difficulty">Difficulty Level:</label>
+                        <select id="difficulty" onchange="changeDifficulty()">
+                            <option value="easy">Easy Chef 👶</option>
+                            <option value="medium" selected>Head Chef 👨‍🍳</option>
+                            <option value="hard">Master Chef 👑</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="game-speed">Customer Speed:</label>
+                        <select id="game-speed" onchange="changeGameSpeed()">
+                            <option value="slow">Slow (8s per customer)</option>
+                            <option value="normal" selected>Normal (6s per customer)</option>
+                            <option value="fast">Fast (4s per customer)</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <button class="menu-button danger" onclick="resetProgress()">RESET ALL PROGRESS</button>
+                    </div>
+                </div>
+                <button class="menu-button" onclick="showMainMenu()">BACK TO KITCHEN</button>
+            </div>
+        </div>
+
+        <!-- Leaderboard Screen -->
+        <div id="leaderboard" class="screen">
+            <div class="instruction-card">
+                <h2>🏆 HALL OF FAME CHEFS</h2>
+                <div id="leaderboard-content" class="leaderboard-content">
+                    <!-- Leaderboard will be populated by JavaScript -->
+                </div>
+                <button class="menu-button" onclick="showMainMenu()">BACK TO KITCHEN</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <!-- Game Header -->
+            <div class="game-header">
+                <div class="score-board">
+                    <div class="score-item">
+                        <span class="score-label">Score:</span>
+                        <span id="current-score">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Customers:</span>
+                        <span id="customers-served">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Accuracy:</span>
+                        <span id="accuracy">100%</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-label">Lives:</span>
+                        <div id="lives-display">❤️❤️❤️</div>
+                    </div>
+                </div>
+                <button class="pause-button" onclick="pauseGame()">⏸️ PAUSE</button>
+            </div>
+
+            <!-- Customer Area -->
+            <div class="customer-area">
+                <div id="current-customer" class="customer-card">
+                    <div class="customer-info">
+                        <h3 id="customer-name">Sarah from HR</h3>
+                        <p id="customer-role">Human Resources</p>
+                        <div class="patience-bar">
+                            <div id="patience-fill" class="patience-fill"></div>
+                        </div>
+                        <p class="patience-text">Customer Patience</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Display -->
+            <div class="order-area">
+                <div class="order-ticket">
+                    <h3>📝 ORDER TICKET</h3>
+                    <div class="email-dish">
+                        <div class="dish-header">
+                            <h4 id="dish-name">Email Appetizer</h4>
+                            <span id="dish-type" class="dish-type">Suspicious</span>
+                        </div>
+                        <div class="email-content">
+                            <div class="email-meta">
+                                <p><strong>From:</strong> <span id="email-from">sender@example.com</span></p>
+                                <p><strong>Subject:</strong> <span id="email-subject">Urgent Action Required</span></p>
+                            </div>
+                            <div class="email-body" id="email-body">
+                                Email content will appear here...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-area">
+                <button id="reject-btn" class="action-button reject" onclick="makeDecision('reject')">
+                    🚫 REJECT<br><small>This is phishing!</small>
+                </button>
+                <button id="serve-btn" class="action-button serve" onclick="makeDecision('serve')">
+                    ✅ SERVE<br><small>This is safe!</small>
+                </button>
+            </div>
+
+            <!-- Kitchen Tips -->
+            <div class="tips-area">
+                <div class="tip-card">
+                    <h4>🧑‍🍳 Kitchen Tip</h4>
+                    <p id="current-tip">Look for suspicious sender addresses and urgent language!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pause Screen -->
+        <div id="pause-screen" class="screen overlay">
+            <div class="pause-card">
+                <h2>⏸️ KITCHEN BREAK</h2>
+                <div class="pause-stats">
+                    <p>Current Score: <span id="pause-score">0</span></p>
+                    <p>Customers Served: <span id="pause-customers">0</span></p>
+                    <p>Accuracy: <span id="pause-accuracy">100%</span></p>
+                </div>
+                <div class="pause-buttons">
+                    <button class="menu-button" onclick="resumeGame()">RESUME COOKING</button>
+                    <button class="menu-button" onclick="endGame()">CLOSE RESTAURANT</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over" class="screen">
+            <div class="game-over-card">
+                <h2 id="game-over-title">🏪 SHIFT COMPLETE!</h2>
+                <div class="final-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Final Score:</span>
+                        <span id="final-score" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Customers Served:</span>
+                        <span id="final-customers" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Final Accuracy:</span>
+                        <span id="final-accuracy" class="stat-value">100%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Chef Rating:</span>
+                        <span id="chef-rating" class="stat-value">Trainee</span>
+                    </div>
+                </div>
+                <div id="achievements" class="achievements">
+                    <!-- Achievements will be populated by JavaScript -->
+                </div>
+                <div class="game-over-buttons">
+                    <button class="menu-button" onclick="startGame()">WORK ANOTHER SHIFT</button>
+                    <button class="menu-button" onclick="showMainMenu()">BACK TO KITCHEN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
